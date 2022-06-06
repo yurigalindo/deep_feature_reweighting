@@ -69,8 +69,7 @@ def get_transform_cub(target_resolution, train, augment_data):
             transforms.RandomResizedCrop(
                 target_resolution,
                 scale=(0.7, 1.0),
-                ratio=(0.75, 1.3333333333333333),
-                interpolation=2),
+                ratio=(0.75, 1.3333333333333333)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
