@@ -1,0 +1,9 @@
+--extra-index-url https://download.pytorch.org/whl/cu113
+pandas
+protobuf==3.20
+sklearn
+tensorboard
+torch
+torchaudio 
+torchvision
+tqdm
