@@ -1,2 +1,5 @@
 .venv/
 waterbirds
+*.tar
+*.gz
+__pycache__
