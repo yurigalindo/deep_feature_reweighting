@@ -65,6 +65,7 @@ def dfr_on_validation_tune(
 
     worst_accs = {}
     for i in range(num_retrains):
+        # retrains the whole model again and accumulates the worst accuracies
         x_val = all_embeddings["val"]
         y_val = all_y["val"]
         g_val = all_g["val"]
@@ -110,6 +111,7 @@ def dfr_on_validation_tune(
             cls_w_options = CLASS_WEIGHT_OPTIONS
         for c in C_OPTIONS:
             for class_weight in cls_w_options:
+                # tests various configurations of Logistic Regression
                 logreg = LogisticRegression(penalty=REG, C=c, solver="liblinear",
                                             class_weight=class_weight)
                 logreg.fit(x_train, y_train)
@@ -135,8 +137,10 @@ def dfr_on_validation_eval(
     if preprocess:
         scaler = StandardScaler()
         scaler.fit(all_embeddings["train"])
+        pickle.dump(scaler,open("scaler_eval","wb"))
 
     for i in range(num_retrains):
+        # trains various times to get the mean of the coefficients later
         x_val = all_embeddings["val"]
         y_val = all_y["val"]
         g_val = all_g["val"]
@@ -183,6 +187,9 @@ def dfr_on_validation_eval(
     logreg.fit(x_train[:n_classes], np.arange(n_classes))
     logreg.coef_ = np.mean(coefs, axis=0)
     logreg.intercept_ = np.mean(intercepts, axis=0)
+
+    pickle.dump(logreg,open("logreg_val","wb"))
+
     preds_test = logreg.predict(x_test)
     preds_train = logreg.predict(x_train)
     n_groups = np.max(g_train) + 1
@@ -252,6 +259,7 @@ def dfr_train_subset_eval(
     x_train = all_embeddings["train"]
     scaler = StandardScaler()
     scaler.fit(x_train)
+    pickle.dump(scaler,open("scaler_train","wb"))
 
     for i in range(num_retrains):
         x_train = all_embeddings["train"]
@@ -291,6 +299,8 @@ def dfr_train_subset_eval(
     logreg.fit(x_train[:n_classes], np.arange(n_classes))
     logreg.coef_ = np.mean(coefs, axis=0)
     logreg.intercept_ = np.mean(intercepts, axis=0)
+
+    pickle.dump(logreg,open("logreg_train_subset","wb"))
 
     preds_test = logreg.predict(x_test)
     preds_train = logreg.predict(x_train)
@@ -337,7 +347,7 @@ model = torchvision.models.resnet50(pretrained=False)
 d = model.fc.in_features
 model.fc = torch.nn.Linear(d, n_classes)
 model.load_state_dict(torch.load(
-    args.ckpt_path
+    args.ckpt_path # model is saved on this path
 ))
 model.cuda()
 model.eval()
