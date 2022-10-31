@@ -397,10 +397,12 @@ for name, loader in [("train", train_loader), ("test", test_loader), ("val", val
     all_g[name] = np.concatenate(all_g[name])
     all_p[name] = np.concatenate(all_p[name])
 
+print(all_y["test"].shape)
+print(all_embeddings["test"].shape)
 print("CORRELATIONS:")
-C = np.coerrcoef(np.concatenate(all_embeddings["val"],all_y["val"],all_p["val"]),rowvar=False)
-print(C[-2:])
-
+C = np.corrcoef(np.c_[all_embeddings["test"],all_y["test"],all_p["test"]],rowvar=False)
+print(C.shape)
+np.savetxt("corr.csv", C[-2:], delimiter=",")
 # DFR on validation
 print("DFR on validation")
 dfr_val_results = {}
