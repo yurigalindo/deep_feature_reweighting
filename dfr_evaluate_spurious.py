@@ -407,6 +407,8 @@ all_g4 = (all_g["test"] == 3).astype(int)
 C = np.corrcoef(np.c_[all_embeddings["test"],all_y["test"],all_p["test"],all_g1,all_g2,all_g3,all_g4],rowvar=False)
 print(C.shape)
 np.savetxt("corr.csv", C[-6:], delimiter=",")
+np.savetxt("embeds_info_waterbirds.csv", np.c_[all_embeddings["test"],all_y["test"],all_p["test"],all_g1,all_g2,all_g3,all_g4], delimiter=",")
+
 # DFR on validation
 print("DFR on validation")
 dfr_val_results = {}
