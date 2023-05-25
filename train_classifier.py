@@ -172,6 +172,8 @@ logger.flush()
 for epoch in range(args.num_epochs):
     if epoch>0:
         T = epoch/5
+    else:
+        T = 1
     model.train()
     loss_meter = AverageMeter()
     acc_groups = {g_idx : AverageMeter() for g_idx in range(trainset.n_groups)}
