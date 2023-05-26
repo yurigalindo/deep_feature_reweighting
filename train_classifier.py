@@ -171,7 +171,7 @@ logger.flush()
 # Train loop
 for epoch in range(args.num_epochs):
     if epoch>0:
-        T = epoch/5
+        T = epoch-1
     else:
         T = 1
     model.train()
