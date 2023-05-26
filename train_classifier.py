@@ -170,7 +170,11 @@ logger.flush()
 
 # Train loop
 for epoch in range(args.num_epochs):
-    if epoch>30:
+    if epoch>40:
+        T = 100
+    elif epoch>30:
+        T = 50
+    elif epoch>20:
         T = 10
     else:
         T = 1
