@@ -170,8 +170,8 @@ logger.flush()
 
 # Train loop
 for epoch in range(args.num_epochs):
-    if epoch>0:
-        T = epoch
+    if epoch>30:
+        T = 10
     else:
         T = 1
     model.train()
