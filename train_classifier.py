@@ -170,7 +170,6 @@ logger.flush()
 
 # Train loop
 for epoch in range(args.num_epochs):
-    T=1
     model.train()
     loss_meter = AverageMeter()
     acc_groups = {g_idx : AverageMeter() for g_idx in range(trainset.n_groups)}
@@ -184,13 +183,13 @@ for epoch in range(args.num_epochs):
             y = p
 
         optimizer.zero_grad()
-        logits = model(x)/T
+        logits = model(x)
         if args.multitask:
             logits, logits_place = logits
-            loss = criterion(logits, y)*T + criterion(logits_place, p)*T
+            loss = criterion(logits, y) + criterion(logits_place, p)
             update_dict(acc_place_groups, p, g, logits_place)
         else:
-            loss = criterion(logits, y)*T
+            loss = criterion(logits, y)
         loss.backward()
         optimizer.step()
         
@@ -238,7 +237,7 @@ for epoch in range(args.num_epochs):
             logger.write(str(results))
 
         torch.save(
-            model.state_dict(), os.path.join(args.output_dir, 'tmp_checkpoint.pt'))
+            model.state_dict(), os.path.join(args.output_dir, f'tmp_checkpoint{epoch}.pt'))
 
     logger.write('\n')
 
